@@ -3,7 +3,7 @@ import { Form, FormikProvider, useFormik } from "formik";
 import Button , {ButtonType} from './common/Button/Button';
 import InputBox from './common/Input/InputBox'
 import * as yup from "yup";
-import { singupAuth } from './redux/Action/auth.action';
+import { loginUser, signUpUser } from './redux/Action/auth.action';
 import { useDispatch } from 'react-redux';
 
 function Login(props) {
@@ -15,14 +15,16 @@ function Login(props) {
     const dispatch = useDispatch()
 
     const handleLogin = (values) => {
+        dispatch(loginUser(values))
     };
 
     const handleSignup = (values) => {
         console.log("handleSignup")
-        dispatch(singupAuth(values))
+        dispatch(signUpUser(values))
     }
 
     const handleReset = () => {
+       console.log("handelReset")
     }
 
     const LoginSchema = {
@@ -31,7 +33,7 @@ function Login(props) {
             .email("Invalid"),
         password: yup.string()
             .required("Password is must required")
-            .min(8, "Password is must 8 character long"),
+            .min(6, "Password is must 6 character long"),
     };
     const SignupSchema = {
         name: yup.string()
@@ -41,7 +43,7 @@ function Login(props) {
             .email("Invalid"),
         password: yup.string()
             .required("Password is must required")
-            .min(8, "Password is must 8 character long"),
+            .min(6, "Password is must 6 character long"),
     };
     const ResetSchema = {
         email: yup.string()
@@ -115,8 +117,8 @@ function Login(props) {
                                     }
                                 </div>
                             </div>
-                            <div className="row justify-content-center">
-                                <div className="col-md-6 form-group mt-3">
+                            <div className="row">
+                                <div className="form-group">
                                     <InputBox
                                         type="email"
                                         className="form-control "
@@ -133,12 +135,12 @@ function Login(props) {
                             {
                                 reset === true ? null :
                                     <div className="row justify-content-center">
-                                        <div className="col-md-6 form-group mt-3 px-0 ">
+                                        <div className="col-md-6 form-group ">
                                             <InputBox
                                                 type="password"
                                                 className="form-control"
                                                 name="password"
-                                                id="password" s
+                                                id="password" 
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="Your Password"
                                                 {...getFieldProps("password")}
@@ -149,9 +151,7 @@ function Login(props) {
                                     </div>
                             }
 
-
-
-                            <div className="mt-5 text-center">
+                            <div className="btn-login">
                                 {
                                     reset === true ?
                                         <Button buttonType={ButtonType.PRIMARY} type="submit" >Submit</Button>
@@ -162,45 +162,24 @@ function Login(props) {
                                             <Button buttonType={ButtonType.PRIMARY} type="submit" >Log In</Button>
                                 }
                             </div>
-
-                            {/* {
-                                reset === true ? null : userType === "Signup" ? (
-                                    <div className="text-center">
-                                        <p className="mt-4 mb-4"> OR </p>
-                                        <NavLink
-                                        to={{ pathname: "https://accounts.google.com/" }}
-                                        target="_blank"
-                                    >
-                                        <Button
-                                            social=""
-                                            buttonType={ButtonType.OUTLINE}
-                                            onClick={() => handleGoogleSignup()}
-                                        >
-                                            Signup With Google
-                                        </Button>
-
-                                        </NavLink>
-                                    </div>
-                                ) : null
-                            } */}
                             
-                            <div className="text-center my-4 ps-0">
+                            <div >
                                 {
                                     userType === 'Signup' ?
                                         <div>
-                                            <label>don't have an account :</label>
+                                            <label>Already have an account?</label>
                                             <Button buttonType={ButtonType.LINK} onClick={() => { setReset(false); setuserType('Login') }}>Log in</Button>
                                         </div>
 
                                         :
                                         <div>
-                                            <label className="pe-2">Already have an account?</label>
+                                            <label className="m-auto">don't have an account :</label>
                                             <Button buttonType={ButtonType.LINK} onClick={() => { setReset(false); setuserType('Signup') }}>Sign up</Button>
                                         </div>
 
                                 }
                             </div>
-                            <div className="text-center">
+                            <div>
                                 <div> forgot password ? <Button buttonType={ButtonType.LINK} onClick={() => setReset(true)}>Click</Button></div>
                             </div>
 
